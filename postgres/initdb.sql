@@ -6,5 +6,5 @@ CREATE TABLE ejemplo
 	clave interger NOT NULL,
 	nombre character varying,
 	direccion character varying
-	CONSTRAINT pk_clave PRIMARY KEY (clave)
+	CONSTRAINT pk_clave PRIMARY KEY(clave)
 );
