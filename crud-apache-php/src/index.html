@@ -59,7 +59,55 @@
                     </table>
                 </div>
             </div>
-        </div>    
+        </div>  
+        
+        <script>
+            fetch('read.php')
+                .then(response => response.text())
+                .then(data => {
+                    document.querySelector('#tablaRegistros tbody').innerHTML = data;
+                })
+                .catch(error => {
+                    console.error('Error al cargar los datos: ', error);
+                });
+        </script>
+        <script>
+        
+            document.querySelector('form').addEventListener('submit', function (e) {
+                e.preventDefault(); // Evitar que el formulario se envíe de manera tradicional
+        
+                // Realizar una solicitud POST al archivo create.php
+                fetch('create.php', {
+                    method: 'POST',
+                    body: new FormData(this) 
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        
+                        alert(data.message);
+                        
+                        location.reload();
+                    } else {
+                       
+                        alert(data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al enviar la solicitud: ', error);
+                });
+            });
+        </script>
+        <script>
+            function eliminarRegistro(clave) {
+                var confirmacion = confirm("¿Estás seguro de que quieres eliminar este registro?");
+        
+                if (confirmacion) {
+                    // redirige a delete.php con la clave para eliminar el registro
+                    window.location.href = "delete.php?clave=" + clave;
+                }
+            }
+        </script>
     </div>
 
     <!-- Agrega enlaces a los archivos JavaScript de Bootstrap y jQuery -->
