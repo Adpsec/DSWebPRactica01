@@ -1,4 +1,7 @@
 <?php
+
+
+fuction(){
 include 'conexion.php'; 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -19,6 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $response = array("status" => "error", "message" => "Error al insertar datos en la base de datos.");
     }
 
-    echo json_encode($response);
+    echo json_encode($response);}
+    
 }
 ?>
