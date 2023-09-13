@@ -26,7 +26,7 @@ try {
         $result = $statement->execute($parameters);
 
         if ($result) {
-            echo "Se registró .";
+            echo "Se registró con éxito";
 
             $_POST['clave'] = '';
             $_POST['name'] = '';
@@ -50,12 +50,40 @@ try {
             if ($result) {
                 echo "Se eliminó el registro con clave: $claveEliminar";
             } else {
-                echo "Error al eliminar ";
+                echo "Error al eliminar el registro.";
             }
         } else {
-            echo "Clave  no válida.";
+            echo "Clave no válida.";
         }
     }
+
+    if (isset($_POST['actualizar'])) {
+        // Obtén los datos del formulario de edición
+        $claveActualizar = $_POST['clave'];
+        $nombreActualizar = $_POST['name'];
+        $direccionActualizar = $_POST['direccion'];
+        $telefonoActualizar = $_POST['telefono'];
+    
+        // Ejecuta una consulta SQL UPDATE para actualizar el registro
+        $query = "UPDATE ejemplo SET nombre = :nombre, direccion = :direccion, telefono = :telefono WHERE clave = :clave";
+        $statement = $pdo->prepare($query);
+        $parameters = [
+            ':clave' => $claveActualizar,
+            ':nombre' => $nombreActualizar,
+            ':direccion' => $direccionActualizar,
+            ':telefono' => $telefonoActualizar
+        ];
+    
+        $result = $statement->execute($parameters);
+    
+        if ($result) {
+            echo "Se actualizó el registro con clave: $claveActualizar";
+            // Puedes limpiar los campos del formulario de edición aquí si lo deseas
+        } else {
+            echo "Error al actualizar el registro.";
+        }
+    }
+    
 
     
     $consulta = "SELECT * FROM ejemplo";
@@ -72,8 +100,7 @@ try {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Crud PHP con Bootstrap</title>
-    <!-- Incluye los archivos de Bootstrap CSS y JS -->
+    <title>Crud PHP </title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
@@ -100,7 +127,10 @@ try {
         </div>
 
         <input type="submit" class="btn btn-primary" name="submit" value="Enviar Formulario">
+        <input type="submit" class="btn btn-primary" name="actualizar" value="Actualizar Registro">
     </form>
+    <form class="container mt-5" method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" onsubmit="return validarFormulario();">
+    
 
     
 
@@ -115,7 +145,7 @@ try {
 
     <?php
     if (!empty($registros)) {
-        echo "Los registros son:<br>";
+        echo "Tabla:<br>";
         echo "<table border='1'>";
         echo "<tr><th>Clave</th><th>Nombre</th><th>Dirección</th><th>Teléfono</th><th>Acciones</th></tr>";
         foreach ($registros as $index => $registro) {
@@ -124,35 +154,35 @@ try {
         echo "<td>{$registro['direccion']}</td>";
         echo "<td>{$registro['telefono']}</td>";
         echo "<td><a href=\"javascript:void(0);\" onclick=\"confirmarEliminar('{$registro['clave']}');\" class='btn btn-danger'>Eliminar</a></td>";
+        echo "<td><a href=\"javascript:void(0);\" onclick=\"consultarRegistro('{$registro['clave']}');\" class='btn btn-primary'>Editar</a></td>";
 
         echo "</tr>";
         }
         echo "</table>";
     } else {
-        echo "No hay registros.";
+        echo "Sin datos a mostrar.";
     }
     ?>
 
     <script>
     function consultarRegistro(clave) {
-        
-        <?php
-        if (!empty($registros)) {
-            echo "var registros = " . json_encode($registros) . ";\n";
-            echo "for (var i = 0; i < registros.length; i++) {\n";
-            echo "if (registros[i].clave == clave) {\n";
-            echo "document.getElementsByName('clave')[0].value = registros[i].clave;\n";
-            echo "document.getElementsByName('name')[0].value = registros[i].nombre;\n";
-            echo "document.getElementsByName('direccion')[0].value = registros[i].direccion;\n";
-            echo "document.getElementsByName('telefono')[0].value = registros[i].telefono;\n";
-            echo "}\n";
-            echo "}\n";
-        }
-        ?>
-
+    <?php
+    if (!empty($registros)) {
+        echo "var registros = " . json_encode($registros) . ";\n";
+        echo "for (var i = 0; i < registros.length; i++) {\n";
+        echo "if (registros[i].clave == clave) {\n";
+        echo "document.getElementsByName('clave')[0].value = registros[i].clave;\n";
+        echo "document.getElementsByName('name')[0].value = registros[i].nombre;\n";
+        echo "document.getElementsByName('direccion')[0].value = registros[i].direccion;\n";
+        echo "document.getElementsByName('telefono')[0].value = registros[i].telefono;\n";
+        echo "}\n";
+        echo "}\n";
     }
+    ?>
+}
+
     function confirmarEliminar(clave) {
-        var confirmacion = confirm("¿quieres eliminar este empleado?");
+        var confirmacion = confirm("¿Quieres eliminar el registro?");
 
         if (confirmacion) {
             window.location.href = "<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>?eliminar=" + clave;
@@ -175,3 +205,6 @@ try {
     </script>
 </body>
 </html>
+
+
+
