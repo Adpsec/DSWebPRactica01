@@ -106,7 +106,7 @@ $eliminar2= $_POST['eliminar2'];
 
 
 if($mostrar != null ){
-    echo $mostrar."-lo quieres es".$mostrar; ver($host,$port,$dbname,$user,$password); unset($mostrar); echo "ya se borro".$mostrar;
+    echo $mostrar."-lo quieres es".$mostrar; ver($host,$port,$dbname,$user,$password); unset($mostrar); echo "ya se borro";
     
 }
 elseif($eliminar !=null){
